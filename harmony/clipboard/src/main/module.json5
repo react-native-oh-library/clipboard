@@ -1,0 +1,7 @@
+{
+  "module": {
+    "name": "clipboard",
+    "type": "har",
+    "deviceTypes": ['default'],
+  }
+}
