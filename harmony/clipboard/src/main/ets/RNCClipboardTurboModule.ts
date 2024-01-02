@@ -165,7 +165,7 @@ export class RNCClipboardTurboModule extends TurboModule {
         logger.debug(TAG,`[RNOH]:setStrings,PasteData--addRecord:${content[i]}`);
       }
 
-      //setData
+      // setData
       systemPasteboard.setData(pasteData).then((data: void) => {
         logger.debug(TAG,"setStrings,Succeeded in setting PasteData.");
       }).catch((err) => {

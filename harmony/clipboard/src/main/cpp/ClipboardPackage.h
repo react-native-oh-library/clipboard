@@ -35,8 +35,8 @@ class ClipboardTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
 public:
     SharedTurboModule createTurboModule(Context ctx, const std::string &name) const override
     {
-        if(name == "RNCClipboard") {
-          return std::make_shared<RNCClipboardTurboModule>(ctx, name);
+        if (name == "RNCClipboard") {
+            return std::make_shared<RNCClipboardTurboModule>(ctx, name);
         }
         return nullptr;
     };
@@ -46,14 +46,13 @@ namespace rnoh {
 
 class ClipboardPackage : public Package {
 public:
-    ClipboardPackage(Package::Context ctx) : Package(ctx){}
+    ClipboardPackage(Package::Context ctx) : Package(ctx) {}
     
     std::unique_ptr<TurboModuleFactoryDelegate> createTurboModuleFactoryDelegate() override
     {
     return std::make_unique<ClipboardTurboModuleFactoryDelegate>();
     }
-    
 };
 } // namespace rnoh
 
-#endif 
+#endif
