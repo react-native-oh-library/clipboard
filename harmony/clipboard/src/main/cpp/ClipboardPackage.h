@@ -13,7 +13,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANT KIND, EXPRESS OR
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -35,8 +35,8 @@ class ClipboardTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
 public:
     SharedTurboModule createTurboModule(Context ctx, const std::string &name) const override
     {
-        if(name == "RNCClipboard") {
-          return std::make_shared<RNCClipboardTurboModule>(ctx, name);
+        if (name == "RNCClipboard") {
+            return std::make_shared<RNCClipboardTurboModule>(ctx, name);
         }
         return nullptr;
     };
@@ -46,14 +46,13 @@ namespace rnoh {
 
 class ClipboardPackage : public Package {
 public:
-    ClipboardPackage(Package::Context ctx) : Package(ctx){}
+    ClipboardPackage(Package::Context ctx) : Package(ctx) {}
     
     std::unique_ptr<TurboModuleFactoryDelegate> createTurboModuleFactoryDelegate() override
     {
     return std::make_unique<ClipboardTurboModuleFactoryDelegate>();
     }
-    
 };
 } // namespace rnoh
 
-#endif 
+#endif

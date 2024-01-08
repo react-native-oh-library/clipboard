@@ -13,7 +13,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANT KIND, EXPRESS OR
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -165,7 +165,7 @@ export class RNCClipboardTurboModule extends TurboModule {
         logger.debug(TAG,`[RNOH]:setStrings,PasteData--addRecord:${content[i]}`);
       }
 
-      //setData
+      // setData
       systemPasteboard.setData(pasteData).then((data: void) => {
         logger.debug(TAG,"setStrings,Succeeded in setting PasteData.");
       }).catch((err) => {
