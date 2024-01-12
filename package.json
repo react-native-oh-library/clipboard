@@ -1,7 +1,10 @@
 {
-  "name": "@react-native-clipboard/clipboard",
-  "version": "1.13.2",
+  "name": "@react-native-oh-tpl/clipboard",
+  "version": "1.13.2-0.0.1",
   "description": "React Native Clipboard API for macOS, iOS, Android, and Windows",
+  "harmony": {
+    "alias": "@react-native-clipboard/clipboard"
+  },
   "keywords": [
     "Clipboard",
     "getString",
@@ -14,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-native-clipboard/clipboard.git"
+    "url": "https://github.com/react-native-oh-library/clipboard.git"
   },
   "license": "MIT",
   "author": "M.Haris Baig <harisbaig100@gmail.com>",
@@ -26,9 +29,13 @@
     "ios",
     "macos",
     "android",
+    "harmony",
     "windows",
     "jest",
     "src",
+    "!harmony/oh_modules",
+    "!harmony/**/build",
+    "!harmony/**/oh_modules",
     "!android/**/build/*"
   ],
   "scripts": {
@@ -67,6 +74,7 @@
     "react-native": ">=0.57.0"
   },
   "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "codegenConfig": {

@@ -2,7 +2,7 @@ import {EmitterSubscription, Platform} from 'react-native';
 import NativeClipboard, {
   addListener,
   removeAllListeners,
-} from './NativeClipboardModule';
+} from '@react-native-clipboard/clipboard/src/NativeClipboardModule';
 
 /**
  * `Clipboard` gives you an interface for setting and getting content from Clipboard on both iOS and Android
@@ -64,11 +64,11 @@ export const Clipboard = {
    * @param the content to be stored in the clipboard.
    */
   setImage(content: string) {
-    if (Platform.OS !== 'ios') {
-      return;
+    // @ts-ignore
+    if (Platform.OS == 'ios' || Platform.OS == 'harmony') {
+      NativeClipboard.setImage(content);
     }
-
-    NativeClipboard.setImage(content);
+    return;
   },
   /**
    * (Android Only)
@@ -142,10 +142,11 @@ export const Clipboard = {
    * ```
    */
   hasURL() {
-    if (Platform.OS !== 'ios') {
-      return;
+    // @ts-ignore
+    if (Platform.OS == 'ios' || Platform.OS == 'harmony') {
+      return NativeClipboard.hasURL();
     }
-    return NativeClipboard.hasURL();
+    return;
   },
   /**
    * (iOS 14+ Only)
@@ -159,10 +160,11 @@ export const Clipboard = {
    * ```
    */
   hasNumber() {
-    if (Platform.OS !== 'ios') {
-      return;
+    // @ts-ignore
+    if (Platform.OS == 'ios' || Platform.OS == 'harmony') {
+      return NativeClipboard.hasNumber();
     }
-    return NativeClipboard.hasNumber();
+    return;
   },
   /**
    * (iOS 14+ Only)
@@ -176,10 +178,11 @@ export const Clipboard = {
    * ```
    */
   hasWebURL() {
-    if (Platform.OS !== 'ios') {
-      return;
+    // @ts-ignore
+    if (Platform.OS == 'ios' || Platform.OS == 'harmony') {
+      return NativeClipboard.hasWebURL();
     }
-    return NativeClipboard.hasWebURL();
+    return;
   },
   /**
    * (iOS and Android Only)
