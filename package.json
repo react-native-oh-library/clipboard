@@ -1,6 +1,6 @@
 {
   "name": "@react-native-oh-library/clipboard",
-  "version": "1.12.1-0.0.1",
+  "version": "1.12.1-0.0.2",
   "description": "React Native Clipboard API for macOS, iOS, Android, and Windows",
   "harmony": {
     "alias": "@react-native-clipboard/clipboard"
