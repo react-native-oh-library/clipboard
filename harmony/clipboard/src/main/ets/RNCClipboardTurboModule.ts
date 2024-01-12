@@ -26,9 +26,12 @@ import { TurboModule, TurboModuleContext } from 'rnoh/ts';
 import pasteboard from '@ohos.pasteboard';
 import util from '@ohos.util';
 import image from '@ohos.multimedia.image';
+import { BusinessError } from '@ohos.base';
 import logger from './Logger';
 
 const TAG = "RNCClipboardTurboModule"
+const prefixPNG = "data:image/png;base64,"
+const prefixJPG = "data:image/jpg;base64,"
 
 export class RNCClipboardTurboModule extends TurboModule {
   constructor(protected ctx: TurboModuleContext) {
@@ -133,7 +136,36 @@ export class RNCClipboardTurboModule extends TurboModule {
   getImagePNG(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call getImagePNG");
-      resolve("demo")
+      let systemPasteboard = pasteboard.getSystemPasteboard();
+      
+      systemPasteboard.getData().then((pasteData)=>{
+        let pixMap = pasteData.getPrimaryPixelMap();
+        //packer方式
+        const imagePackerApi = image.createImagePacker();
+        let packOpt:image.PackingOption = {
+          format:"image/png",
+          quality:96
+        }
+        imagePackerApi.packing(pixMap,packOpt).then( data =>{
+          let uint8Array = new Uint8Array(data);
+          let base64Helper = new util.Base64Helper();
+          let base64Str = base64Helper.encodeToStringSync(uint8Array,util.Type.BASIC) 
+          let finalStr = prefixPNG + base64Str
+          resolve(finalStr)
+        }).catch((err)=>{
+          logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImagePNG,failed to packing");
+          reject(err)
+        })
+        imagePackerApi.release().then(()=>{
+            logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImagePNG, releasing image packaging");
+        }).catch((error : BusinessError)=>{ 
+            logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImagePNG, releasing image packaging error");
+        }) 
+
+      }).catch((err)=>{
+        logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImagePNG,failed to getData");
+        reject(err)
+      })
     });
   }
 
@@ -141,12 +173,83 @@ export class RNCClipboardTurboModule extends TurboModule {
   getImageJPG(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call getImageJPG");
-      resolve("demo")
+      let systemPasteboard = pasteboard.getSystemPasteboard();
+      
+      systemPasteboard.getData().then((pasteData)=>{
+        let pixMap = pasteData.getPrimaryPixelMap();
+    
+        //packer方式
+        const imagePackerApi = image.createImagePacker();
+        let packOpt:image.PackingOption = {
+          format:"image/jpeg",
+          quality:96
+        }
+        imagePackerApi.packing(pixMap,packOpt).then( data =>{
+          let uint8Array = new Uint8Array(data);
+          let base64Helper = new util.Base64Helper();
+          let base64Str = base64Helper.encodeToStringSync(uint8Array,util.Type.BASIC) 
+          let finalStr = prefixJPG + base64Str
+          resolve(finalStr)
+        }).catch((err)=>{
+          logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImageJPG,failed to packing");
+          reject(err)
+        })
+        imagePackerApi.release().then(()=>{
+            logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImageJPG, releasing image packaging");
+        }).catch((error : BusinessError)=>{ 
+            logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImageJPG, releasing image packaging error");
+        }) 
+
+      }).catch((err)=>{
+        logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImageJPG,failed to getData");
+        reject(err)
+      })
     });
   }
 
   setImage(content: string) {
     logger.debug(TAG,`[RNOH]:RNCClipboardTurboModule call setImage:${content}`);
+    let iconBase64 = content
+
+    let base64 = new util.Base64Helper();
+    let uint8 = base64.decodeSync(iconBase64,util.Type.BASIC)
+    let arrayBuffer = uint8.buffer.slice(uint8.byteOffset,uint8.byteLength + uint8.byteOffset)
+    let imageSource:image.ImageSource = image.createImageSource(arrayBuffer);
+    logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call setImage100");
+
+    imageSource.getImageInfo().then(value=>{
+      let hValue = Math.round(value.size.height);
+      let wValue = Math.round(value.size.width);
+      let defaultSize:image.Size ={
+        height:hValue,
+        width:wValue
+      };
+      let opts:image.DecodingOptions = {
+        editable:true,
+        desiredSize:defaultSize
+      };
+      logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call setImage200");
+      imageSource.createPixelMap(opts).then((pixMap)=>{
+        let iconPixelMap = pixMap
+        logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call setImage300");
+        imageSource.release()
+
+        let systemPasteboard = pasteboard.getSystemPasteboard();
+        systemPasteboard.getData().then((pasteData)=>{
+          let record = pasteboard.createRecord(pasteboard.MIMETYPE_PIXELMAP,iconPixelMap)
+          pasteData.addRecord(record)
+
+          systemPasteboard.setData(pasteData).then((data:void)=>{
+            logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call setImage305,successed in setting pasteData");
+          }).catch((err)=>{
+            logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call setImage305,failed in setting pasteData");
+          })
+        }).catch((err)=>{
+          logger.debug(TAG,`[RNOH]:RNCClipboardTurboModule call setImage,failed get pasteData.cause:${err.message}`);
+        })
+      })
+    })
+
   }
 
   getImage(): Promise<string> {
@@ -182,14 +285,11 @@ export class RNCClipboardTurboModule extends TurboModule {
       logger.debug(TAG,"RNCClipboardTurboModule call hasImage");
       let systemPasteboard = pasteboard.getSystemPasteboard();
       systemPasteboard.getData().then((pasteData) => {
-        let count = pasteData.getRecordCount();
+        let pixelMapObj = pasteData.getPrimaryPixelMap();
         let result = false
-        for (let index = 0; index < count; index++) {
-          let record = pasteData.getRecord(index);
-          if (record.mimeType == pasteboard.MIMETYPE_PIXELMAP) {
-            result = true
-            break
-          }
+        if (pixelMapObj) {
+          logger.debug(TAG,"RNCClipboardTurboModule call hasImage,hasPixelobj");
+          result = true
         }
         resolve(result)
       }).catch((err) => {
