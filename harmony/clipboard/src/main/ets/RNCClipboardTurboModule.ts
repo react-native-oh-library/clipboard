@@ -157,7 +157,7 @@ export class RNCClipboardTurboModule extends TurboModule {
           reject(err)
         })
         imagePackerApi.release().then(()=>{
-            logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImagePNG, releasing image packaging");
+            logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call getImagePNG, releasing image packaging");
         }).catch((error : BusinessError)=>{ 
             logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImagePNG, releasing image packaging error");
         }) 
@@ -195,7 +195,7 @@ export class RNCClipboardTurboModule extends TurboModule {
           reject(err)
         })
         imagePackerApi.release().then(()=>{
-            logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImageJPG, releasing image packaging");
+            logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call getImageJPG, releasing image packaging");
         }).catch((error : BusinessError)=>{ 
             logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call getImageJPG, releasing image packaging error");
         }) 
@@ -242,7 +242,7 @@ export class RNCClipboardTurboModule extends TurboModule {
           systemPasteboard.setData(pasteData).then((data:void)=>{
             logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call setImage305,successed in setting pasteData");
           }).catch((err)=>{
-            logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call setImage305,failed in setting pasteData");
+            logger.error(TAG,"[RNOH]:RNCClipboardTurboModule call setImage305,failed in setting pasteData");
           })
         }).catch((err)=>{
           logger.debug(TAG,`[RNOH]:RNCClipboardTurboModule call setImage,failed get pasteData.cause:${err.message}`);
