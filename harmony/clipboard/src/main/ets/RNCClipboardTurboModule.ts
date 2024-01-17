@@ -61,23 +61,8 @@ export class RNCClipboardTurboModule extends TurboModule {
 
   getStrings(): Promise<string[]> {
     return new Promise<string[]>((resolve, reject) => {
-      logger.debug(TAG,"call getStrings fun");
-      let systemPasteboard = pasteboard.getSystemPasteboard();
-      systemPasteboard.getData().then((pasteData) => {
-        let count = pasteData.getRecordCount();
-        let resultSet = []
-        logger.debug(TAG,`getStrings fun,getRecordCount :${count}`);
-        for (let index = 0; index < count; index++) {
-          let record = pasteData.getRecord(index)
-          if (record.mimeType == pasteboard.MIMETYPE_TEXT_PLAIN) {
-            resultSet.push(record.plainText)
-          }
-        }
-        resolve(resultSet)
-      }).catch((err) => {
-        logger.error(TAG,`getString fun,Failed to get PasteData. Cause:${err.message}`);
-        reject(err)
-      })
+      logger.debug(TAG,"call getStrings fun,no implement");
+      resolve(["no","implement"]);
     });
   }
 
@@ -260,23 +245,7 @@ export class RNCClipboardTurboModule extends TurboModule {
   }
 
   setStrings(content: string[]) {
-    logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call setStrings fun");
-    let systemPasteboard = pasteboard.getSystemPasteboard();
-    systemPasteboard.getData().then((pasteData) => {
-      for (let i = 0; i < content.length; i++) {
-        pasteData.addRecord(pasteboard.MIMETYPE_TEXT_PLAIN, content[i]);
-        logger.debug(TAG,`[RNOH]:setStrings,PasteData--addRecord:${content[i]}`);
-      }
-
-      // setData
-      systemPasteboard.setData(pasteData).then((data: void) => {
-        logger.debug(TAG,"setStrings,Succeeded in setting PasteData.");
-      }).catch((err) => {
-        logger.error(TAG,`setStrings,Failed to set PasteData. Cause:${err.message}`);
-      });
-    }).catch((err) => {
-      logger.error(TAG,`setStrings,getData error,Cause:${err.message}`);
-    })
+    logger.debug(TAG,"[RNOH]:RNCClipboardTurboModule call setStrings fun,no implement");
     return;
   }
 
@@ -301,25 +270,9 @@ export class RNCClipboardTurboModule extends TurboModule {
 
   hasURL(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      logger.debug(TAG,"RNCClipboardTurboModule call hasURL");
-      let systemPasteboard = pasteboard.getSystemPasteboard();
-      systemPasteboard.getData().then((pasteData) => {
-        let count = pasteData.getRecordCount();
-        let result = false
-        for (let index = 0; index < count; index++) {
-          let record = pasteData.getRecord(index);
-          if (record.mimeType == pasteboard.MIMETYPE_TEXT_URI) {
-            logger.debug(TAG,"hasURL,mimeType=MIMETYPE_TEXT_URI");
-            result = true
-            break
-          }
-        }
-        resolve(result)
-      }).catch((err) => {
-        logger.error(TAG,`[RNOH]: hasURL,Failed to get PasteData. Cause:${err.message}`);
-        reject(err)
-      })
-    });
+        logger.debug(TAG,"RNCClipboardTurboModule call hasURL,no implement");
+        resolve(false);
+      });
   }
 
   hasWebURL(): Promise<boolean> {
