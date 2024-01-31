@@ -1,12 +1,12 @@
 {
   "license": "ISC",
   "types": "",
-  "devDependencies": {
-    "rnoh": "file:../rnoh"
-  },
+  "devDependencies": {},
   "name": "rnoh-clipboard",
   "description": "",
   "main": "index.ets",
-  "version": "0.0.1",
-  "dependencies": {}
+  "version": "1.13.2-0.0.3",
+  "dependencies": {
+    "rnoh": "file:../rnoh"
+  }
 }
