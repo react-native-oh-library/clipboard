@@ -1,6 +1,6 @@
 {
   "name": "@react-native-oh-tpl/clipboard",
-  "version": "1.13.2-0.0.3",
+  "version": "1.13.2-0.0.4",
   "description": "React Native Clipboard API for macOS, iOS, Android, and Windows",
   "harmony": {
     "alias": "@react-native-clipboard/clipboard"
@@ -26,12 +26,7 @@
   "files": [
     "dist",
     "RNCClipboard.podspec",
-    "ios",
-    "macos",
-    "android",
     "harmony",
-    "windows",
-    "jest",
     "src",
     "!harmony/oh_modules",
     "!harmony/**/build",
@@ -79,13 +74,5 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
-  },
-  "codegenConfig": {
-    "name": "rnclipboard",
-    "type": "modules",
-    "jsSrcsDir": "./src",
-    "android": {
-      "javaPackageName": "com.reactnativecommunity.clipboard"
-    }
   }
 }
