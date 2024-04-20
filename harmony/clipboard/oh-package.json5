@@ -2,11 +2,11 @@
   "license": "ISC",
   "types": "",
   "devDependencies": {},
-  "name": "rnoh-clipboard",
+  "name": "@react-native-oh-tpl/clipboard",
+  "version": "1.13.2-0.0.4",
   "description": "",
   "main": "index.ets",
-  "version": "1.13.2-0.0.3",
   "dependencies": {
-    "rnoh": "file:../rnoh"
+    "@rnoh/react-native-openharmony": "file:../react_native_openharmony"
   }
 }

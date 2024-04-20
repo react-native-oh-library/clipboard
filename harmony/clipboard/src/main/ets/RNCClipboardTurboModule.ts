@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { TurboModule, TurboModuleContext } from 'rnoh/ts';
+import { TurboModule, TurboModuleContext } from '@rnoh/react-native-openharmony/ts';
 import pasteboard from '@ohos.pasteboard';
 import util from '@ohos.util';
 import image from '@ohos.multimedia.image';
