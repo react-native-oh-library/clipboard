@@ -23,12 +23,12 @@
  */
 
 import { TurboModule, TurboModuleContext } from '@rnoh/react-native-openharmony/ts';
-import pasteboard from '@ohos.pasteboard';
+import { pasteboard, BusinessError } from '@kit.BasicServicesKit';
 import util from '@ohos.util';
 import image from '@ohos.multimedia.image';
-import { BusinessError } from '@ohos.base';
 import logger from './Logger';
 import abilityAccessCtrl, { Permissions } from '@ohos.abilityAccessCtrl';
+import url from '@ohos.url';
 
 const TAG = "RNCClipboardTurboModule"
 const prefixPNG = "data:image/png;base64,"
@@ -73,8 +73,32 @@ export class RNCClipboardTurboModule extends TurboModule {
 
   getStrings(): Promise<string[]> {
     return new Promise<string[]>((resolve, reject) => {
-      logger.debug(TAG, "call getStrings fun,no implement");
-      resolve(["no", "implement"]);
+      this.requestPermission().then(res => {
+        if (res) {
+          logger.debug(TAG, "call getStrings fun");
+          let systemPasteboard = pasteboard.getSystemPasteboard();
+          systemPasteboard.getData().then((pasteData) => {
+            let count = pasteData.getRecordCount();
+            let resultSet = []
+            logger.debug(TAG, `getStrings fun,getRecordCount :${count}`);
+            for (let index = 0; index < count; index++) {
+              let record = pasteData.getRecord(index)
+              if (record.mimeType == pasteboard.MIMETYPE_TEXT_PLAIN) {
+                resultSet.push(record.plainText)
+              }
+            }
+            resolve(resultSet)
+          }).catch((err) => {
+            logger.error(TAG, `getString fun,Failed to get PasteData. Cause:${err.message}`);
+            reject(err)
+          })
+        } else {
+          reject({
+            code: 0,
+            message: "User refuses authorization"
+          })
+        }
+      })
     });
   }
 
@@ -293,7 +317,23 @@ export class RNCClipboardTurboModule extends TurboModule {
   }
 
   setStrings(content: string[]) {
-    logger.debug(TAG, "[RNOH]:RNCClipboardTurboModule call setStrings fun,no implement");
+    logger.debug(TAG, "[RNOH]:RNCClipboardTurboModule call setStrings fun");
+    let systemPasteboard = pasteboard.getSystemPasteboard();
+    systemPasteboard.getData().then((pasteData) => {
+      for (let i = 0; i < content.length; i++) {
+        pasteData.addRecord(pasteboard.MIMETYPE_TEXT_PLAIN, content[i]);
+        logger.debug(TAG, `[RNOH]:setStrings,PasteData--addRecord:${content[i]}`);
+      }
+
+      // setData
+      systemPasteboard.setData(pasteData).then((data: void) => {
+        logger.debug(TAG, "setStrings,Succeeded in setting PasteData.");
+      }).catch((err) => {
+        logger.error(TAG, `setStrings,Failed to set PasteData. Cause:${err.message}`);
+      });
+    }).catch((err) => {
+      logger.error(TAG, `setStrings,getData error,Cause:${err.message}`);
+    })
     return;
   }
 
@@ -327,8 +367,49 @@ export class RNCClipboardTurboModule extends TurboModule {
 
   hasURL(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      logger.debug(TAG, "RNCClipboardTurboModule call hasURL,no implement");
-      resolve(false);
+      this.requestPermission().then(res => {
+        if (res) {
+          logger.debug(TAG, "RNCClipboardTurboModule call hasWebURL");
+          let systemPasteboard = pasteboard.getSystemPasteboard();
+          systemPasteboard.getData().then((pasteData) => {
+            let count = pasteData.getRecordCount();
+            let result = false;
+            let isValidUrl = (string) => {
+              try {
+                url.URL.parseURL(string);
+                return true;
+              } catch (err) {
+                return false;
+              }
+            };
+            for (let index = 0; index < count; index++) {
+              let record = pasteData.getRecord(index);
+              if (record.mimeType == pasteboard.MIMETYPE_TEXT_URI) {
+                if (isValidUrl(record.uri)) {
+                  logger.debug(TAG, "hasURL,mimeType=MIMETYPE_TEXT_URI");
+                  result = true
+                  break
+                }
+              } else if (record.mimeType == pasteboard.MIMETYPE_TEXT_PLAIN) {
+                if (isValidUrl(record.plainText)) {
+                  logger.debug(TAG, "hasURL,find URL in MIMETYPE_TEXT_PLAIN");
+                  result = true
+                  break
+                }
+              }
+            }
+            resolve(result)
+          }).catch((err) => {
+            logger.error(TAG, `[RNOH]: hasURL,Failed to get PasteData. Cause:${err.message}`);
+            reject(err)
+          });
+        } else {
+          reject({
+            code: 0,
+            message: "User refuses authorization"
+          })
+        }
+      });
     });
   }
 
@@ -379,16 +460,16 @@ export class RNCClipboardTurboModule extends TurboModule {
     return new Promise<boolean>((resolve) => {
       abilityAccessCtrl.createAtManager()
         .requestPermissionsFromUser(this.ctx.uiAbilityContext, PERMISSIONS).then(result => {
-          if (result.authResults[0] == 0) {
-            resolve(true);
-          } else {
-            logger.debug(TAG, `getString,text out:用户拒绝授权`);
-            resolve(false);
-          }
-        }).catch(() => {
+        if (result.authResults[0] == 0) {
+          resolve(true);
+        } else {
           logger.debug(TAG, `getString,text out:用户拒绝授权`);
           resolve(false);
-        })
+        }
+      }).catch(() => {
+        logger.debug(TAG, `getString,text out:用户拒绝授权`);
+        resolve(false);
+      })
     });
   }
 }
