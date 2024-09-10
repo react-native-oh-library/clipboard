@@ -319,21 +319,25 @@ export class RNCClipboardTurboModule extends TurboModule {
   setStrings(content: string[]) {
     logger.debug(TAG, "[RNOH]:RNCClipboardTurboModule call setStrings fun");
     let systemPasteboard = pasteboard.getSystemPasteboard();
-    systemPasteboard.getData().then((pasteData) => {
-      for (let i = 0; i < content.length; i++) {
-        pasteData.addRecord(pasteboard.MIMETYPE_TEXT_PLAIN, content[i]);
-        logger.debug(TAG, `[RNOH]:setStrings,PasteData--addRecord:${content[i]}`);
-      }
+    systemPasteboard.clear().then(() => {
+      systemPasteboard.getData().then((pasteData) => {
+        for (let i = 0; i < content.length; i++) {
+          pasteData.addRecord(pasteboard.MIMETYPE_TEXT_PLAIN, content[i]);
+          logger.debug(TAG, `[RNOH]:setStrings,PasteData--addRecord:${content[i]}`);
+        }
 
-      // setData
-      systemPasteboard.setData(pasteData).then((data: void) => {
-        logger.debug(TAG, "setStrings,Succeeded in setting PasteData.");
+        // setData
+        systemPasteboard.setData(pasteData).then((data: void) => {
+          logger.debug(TAG, "setStrings,Succeeded in setting PasteData.");
+        }).catch((err) => {
+          logger.error(TAG, `setStrings,Failed to set PasteData. Cause:${err.message}`);
+        });
       }).catch((err) => {
-        logger.error(TAG, `setStrings,Failed to set PasteData. Cause:${err.message}`);
-      });
-    }).catch((err) => {
-      logger.error(TAG, `setStrings,getData error,Cause:${err.message}`);
-    })
+        logger.error(TAG, `setStrings,getData error,Cause:${err.message}`);
+      })
+    }).catch((err: BusinessError) => {
+      console.error(`Failed to clear the PasteData. Cause: ${err.message}`);
+    });
     return;
   }
 
