@@ -1,7 +1,7 @@
 {
   "name": "@react-native-oh-tpl/clipboard",
   "version": "1.13.2-0.0.8",
-  "description": "React Native Clipboard API for macOS, iOS, Android, and Windows",
+  "description": "React Native Clipboard API",
   "harmony": {
     "alias": "@react-native-clipboard/clipboard"
   },
@@ -30,12 +30,9 @@
     "src",
     "!harmony/oh_modules",
     "!harmony/**/build",
-    "!harmony/**/oh_modules",
-    "!android/**/build/*"
+    "!harmony/**/oh_modules"
   ],
   "scripts": {
-    "ios": "react-native run-ios --project-path \"./example/ios\"",
-    "android": "react-native run-android --root example",
     "windows": "cd example && react-native run-windows",
     "start": "react-native start",
     "build": "tsc",
