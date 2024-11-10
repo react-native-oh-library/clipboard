@@ -63,6 +63,24 @@ static jsi::Value _hostFunction_RNCClipboardTurboModule_setString(
     return jsi::Value(static_cast<ArkTSTurboModule &> (turboModule).call(rt, "setString", args, count));
 }
 
+static jsi::Value _hostFunction_RNCClipboardTurboModule_addListener(
+    jsi::Runtime &rt,
+    react::TurboModule & turboModule,
+    const jsi::Value* args,
+    size_t count)
+{
+    return jsi::Value(static_cast<ArkTSTurboModule &> (turboModule).call(rt, "addListener", args, count));
+}
+
+static jsi::Value _hostFunction_RNCClipboardTurboModule_removeListeners(
+    jsi::Runtime &rt,
+    react::TurboModule & turboModule,
+    const jsi::Value* args,
+    size_t count)
+{
+    return jsi::Value(static_cast<ArkTSTurboModule &> (turboModule).call(rt, "removeListeners", args, count));
+}
+
 static jsi::Value _hostFunction_RNCClipboardTurboModule_hasString(
     jsi::Runtime &rt,
     react::TurboModule & turboModule,
@@ -159,17 +177,19 @@ RNCClipboardTurboModule::RNCClipboardTurboModule(const ArkTSTurboModule::Context
     methodMap_["getConstants"]= MethodMetadata{0, _hostFunction_RNCClipboardTurboModule_getConstants};
     methodMap_["getString"]= MethodMetadata{0, _hostFunction_RNCClipboardTurboModule_getString};
     methodMap_["getStrings"]= MethodMetadata{0, _hostFunction_RNCClipboardTurboModule_getStrings};
-    
+
     methodMap_["setString"]= MethodMetadata{1, _hostFunction_RNCClipboardTurboModule_setString};
+    methodMap_["addListener"]= MethodMetadata{1, _hostFunction_RNCClipboardTurboModule_addListener};
+    methodMap_["removeListeners"]= MethodMetadata{1, _hostFunction_RNCClipboardTurboModule_removeListeners};
     methodMap_["hasString"]= MethodMetadata{0, _hostFunction_RNCClipboardTurboModule_hasString};
-    
+
     methodMap_["hasNumber"]= MethodMetadata{0, _hostFunction_RNCClipboardTurboModule_hasNumber};
     methodMap_["getImagePNG"]= MethodMetadata{0, _hostFunction_RNCClipboardTurboModule_getImagePNG};
     methodMap_["getImageJPG"]= MethodMetadata{0, _hostFunction_RNCClipboardTurboModule_getImageJPG};
-    
+
     methodMap_["setImage"]= MethodMetadata{1, _hostFunction_RNCClipboardTurboModule_setImage};
     methodMap_["getImage"]= MethodMetadata{0, _hostFunction_RNCClipboardTurboModule_getImage};
-    
+
     methodMap_["setStrings"]= MethodMetadata{1, _hostFunction_RNCClipboardTurboModule_setStrings};
     methodMap_["hasImage"]= MethodMetadata{0, _hostFunction_RNCClipboardTurboModule_hasImage};
     methodMap_["hasURL"]= MethodMetadata{0, _hostFunction_RNCClipboardTurboModule_hasURL};
