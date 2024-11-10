@@ -476,4 +476,12 @@ export class RNCClipboardTurboModule extends TurboModule {
       })
     });
   }
+
+  addListener(eventName: string) {
+
+  }
+
+  removeListeners(count: number) {
+
+  }
 }
